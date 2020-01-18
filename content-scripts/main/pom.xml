@@ -6,16 +6,16 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>com.tubecentric</groupId>
-		<artifactId>browser-extension</artifactId>
-		<version>1.0</version>
-  </parent>
+    <parent>
+      <groupId>com.tubecentric</groupId>
+      <artifactId>content-scripts</artifactId>
+      <version>1.0</version>
+    </parent>
 
-  <groupId>com.tubecentric</groupId>
-  <artifactId>locales</artifactId>
-  <version>1.0</version>
-  <packaging>jar</packaging>
+    <groupId>com.tubecentric</groupId>
+    <artifactId>content-scripts-main</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
 
 	<build>
 		<plugins>
@@ -23,9 +23,9 @@
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
 				<version>1.9.1</version>
-				<configuration>
+        <configuration>
           <workingDirectory>${project.basedir}</workingDirectory>
-					<installDirectory>${project.parent.basedir}</installDirectory>
+					<installDirectory>${project.parent.parent.basedir}</installDirectory>
 				</configuration>
 				<executions>
 					<execution>

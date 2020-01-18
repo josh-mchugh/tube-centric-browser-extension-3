@@ -13,9 +13,8 @@
 
 	   <modules>
         <module>manifest</module>
-        <module>locales</module>
         <module>background</module>
-        <module>content-script</module>
+        <module>content-scripts</module>
     </modules>
 
   <build>
