@@ -4,7 +4,7 @@ var argv = require("yargs").argv;
 var webpack = require("webpack");
 var webpackStream = require("webpack-stream");
 
-gulp.task("clean", del.bind(null, ["../../dist/content-scripts/**"], {force: true}));
+gulp.task("clean", del.bind(null, ["../../dist/content-scripts/main/**"], {force: true}));
 
 gulp.task("webpack", function() {
     return gulp.src("./src/main.js")

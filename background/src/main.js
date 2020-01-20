@@ -6,7 +6,8 @@ browser.runtime.onInstalled.addListener(details => {
   console.log("previousVersion", details.previousVersion);
 });
 
-browser.runtime.onMessage.addListener(function(message, sender ,sendResponse){
+browser.runtime.onMessage.addListener(function(message, sender ,sendResponse) {
+  console.log("Background onMessage listener.");
   console.log(message.greeting);
   sendResponse({farewell: "Good bye!"})
   return true;

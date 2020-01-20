@@ -24,8 +24,10 @@
             "matches": [
                 "*://*.youtube.com/*"
             ],
+            "css": ["content-scripts/tag-counter/tag-counter.css"],
             "js": [
-                "content-scripts/main/main.js"
+                "content-scripts/main/main.js",
+                "content-scripts/tag-counter/tag-counter.js"
             ],
             "run_at": "document_idle",
             "all_frames": false
