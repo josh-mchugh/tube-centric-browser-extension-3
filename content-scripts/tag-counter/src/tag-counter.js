@@ -26,12 +26,15 @@ export class TagCounter extends React.Component {
 
     componentDidMount() {
 
+      const title = document.querySelector(this.titleSelector).textContent;
+      const description = document.querySelector(this.descriptionSelector).textContent;
+
       this.setState({
-        title: document.querySelector(this.titleSelector).textContent,
-        description: document.querySelector(this.descriptionSelector).textContent,
-        tags: this.getTagsFromTagsContainer(),
-        titleTags: this.getTagsInTitle(),
-        descriptionTags: this.getTagsInDescription()
+        title: title,
+        description: description,
+        tags: this.getTagsFromDOM(),
+        titleTags: this.getTagsInString(title),
+        descriptionTags: this.getTagsInString(description)
       });
 
       this.titleObserver = new DomObserver(this.titleSelector, this.handleTitleChange).observe();
@@ -43,7 +46,7 @@ export class TagCounter extends React.Component {
       mutations.forEach(mutation =>
           this.setState({
             title: mutation.target.textContent,
-            titleTags: this.getTagsInTitle()
+            titleTags: this.getTagsInString(mutation.target.textContent)
           })
       );
     }
@@ -52,7 +55,7 @@ export class TagCounter extends React.Component {
       mutations.forEach(mutation =>
         this.setState({
           description: mutation.target.textContent,
-          descriptionTags: this.getTagsInDescription()
+          descriptionTags: this.getTagsInString(mutation.target.textContent)
         })
       );
     }
@@ -61,15 +64,15 @@ export class TagCounter extends React.Component {
       mutations.forEach(mutation => {
         if (mutation.addedNodes.length >= 1 || mutation.removedNodes.length >= 1) {
           this.setState({
-            tags: this.getTagsFromTagsContainer(),
-            titleTags: this.getTagsInTitle(),
-            descriptionTags: this.getTagsInDescription()
+            tags: this.getTagsFromDOM(),
+            titleTags: this.getTagsInString(this.state.title),
+            descriptionTags: this.getTagsInString(this.state.description)
           })
         }
       });
     }
 
-    getTagsFromTagsContainer = () => {
+    getTagsFromDOM = () => {
       const tags = [];
       document.querySelectorAll(this.tagsSelector).forEach(node => {
         tags.push(node.textContent);
@@ -77,18 +80,11 @@ export class TagCounter extends React.Component {
       return tags;
     }
 
-    getTagsInTitle = () => {
-      if (!this.state.tags || !this.state.title) {
+    getTagsInString = (value) => {
+      if (!this.state.tags) {
         return [];
       }
-      return this.state.tags.filter(tag => this.state.title.toLowerCase().includes(tag.toLowerCase()));
-    }
-
-    getTagsInDescription = () => {
-      if (!this.state.tags || !this.state.description) {
-        return [];
-      }
-      return this.state.tags.filter(tag => this.state.description.toLowerCase().includes(tag.toLowerCase()));
+      return this.state.tags.filter(tag => value.toLowerCase().includes(tag.toLowerCase()));
     }
 
     getTagsCount = () => {
@@ -104,7 +100,7 @@ export class TagCounter extends React.Component {
     }
 
     getTotalTagsUsedCount = () => {
-      return this.state.getTotalTagsUsed().size;
+      return this.getTotalTagsUsed().size;
     }
 
     getTotalTagsUsed = () => {
@@ -133,7 +129,7 @@ export class TagCounter extends React.Component {
                   </div>
                   <div>
                     <div className={'value'}>
-                      {this.getTitleTagsCount() + this.getDescriptionTagsCount()} / {this.getTagsCount()}
+                      {this.getTotalTagsUsedCount()} / {this.getTagsCount()}
                     </div>
                     <div className={'label'}>
                       Tags Used
