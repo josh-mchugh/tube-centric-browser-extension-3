@@ -18,7 +18,6 @@
     <packaging>pom</packaging>
 
     <modules>
-      <module>main</module>
       <module>tag-counter</module>
     </modules>
 
