@@ -22,13 +22,15 @@
     "content_scripts": [
         {
             "matches": [
-                "*://*.youtube.com/video/*/edit*"
+                "*://*.youtube.com/*"
             ],
             "css": [
-              "content-scripts/tag-counter/tag-counter.css"
+              "content-scripts/tag-counter/tag-counter.css",
+              "content-scripts/tag-search/tag-search.css"
             ],
             "js": [
-              "content-scripts/tag-counter/tag-counter.js"
+              "content-scripts/tag-counter/tag-counter.js",
+              "content-scripts/tag-search/tag-search.js"
             ],
             "run_at": "document_idle",
             "all_frames": false

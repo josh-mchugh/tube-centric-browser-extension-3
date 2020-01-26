@@ -4,15 +4,6 @@ import { DomObserver } from './utils/DomObserver';
 
 export class TagCounter extends React.Component {
 
-    titleSelector = '#left .title #textbox';
-    descriptionSelector = '#left .description #textbox';
-    tagsContainerSelector = '#left .tags #chip-bar .chip-and-bar';
-    tagsSelector = this.tagsContainerSelector + ' #chip-text';
-
-    titleObserver = null
-    descriptionObserver = null;
-    tagsObserver = null;
-
     constructor(props, context) {
       super(props, context);
       this.state = {
@@ -22,6 +13,15 @@ export class TagCounter extends React.Component {
         titleTags: [],
         descriptionTags: []
       };
+
+      this.titleSelector = '#left .title #textbox';
+      this.descriptionSelector = '#left .description #textbox';
+      this.tagsContainerSelector = '#left .tags #chip-bar .chip-and-bar';
+      this.tagsSelector = this.tagsContainerSelector + ' #chip-text';
+
+      this.titleObserver = null
+      this.descriptionObserver = null;
+      this.tagsObserver = null;
     }
 
     componentDidMount() {
@@ -40,6 +40,13 @@ export class TagCounter extends React.Component {
       this.titleObserver = new DomObserver(this.titleSelector, this.handleTitleChange).observe();
       this.descriptionObserver = new DomObserver(this.descriptionSelector, this.handleDescriptionChange).observe();
       this.tagsObserver = new DomObserver(this.tagsContainerSelector, this.handleTagsChange).observe();
+    }
+
+    componentWillUnmount() {
+
+      this.titleObserver.disconnect();
+      this.descriptionObserver.disconnect();
+      this.tagsObserver.disconnect();
     }
 
     handleTitleChange = (mutations) => {

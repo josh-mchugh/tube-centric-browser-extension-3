@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { TagCounter } from './tag-counter.js';
+import App from './App';
 import * as browser from 'webextension-polyfill';
 
 browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -56,7 +56,7 @@ function startApp() {
 function attachApp(element) {
 
   const app = document.createElement('div');
-  element.insertBefore(app, element.firstChild);
+  element.insertBefore(app, element.querySelector(".tags"));
 
-  ReactDOM.render(<TagCounter />, app);
+  ReactDOM.render(<App />, app);
 }

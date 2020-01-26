@@ -19,6 +19,7 @@
 
     <modules>
       <module>tag-counter</module>
+      <module>tag-search</module>
     </modules>
 
     <build>
