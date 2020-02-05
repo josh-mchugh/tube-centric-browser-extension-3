@@ -11,6 +11,7 @@
 @import "~bootstrap/scss/_utilities";
 
 .tc-scope {
+  font-family: 'Roboto', 'Noto', sans-serif;
   .container {
     display: flex;
     flex-direction: row;
@@ -30,10 +31,12 @@
 }
 
 .tc-modal-title {
+  font-family: 'Roboto', 'Noto', sans-serif;
   font-size: 1.3rem;
 }
 
 .tc-modal-body {
+  font-family: 'Roboto', 'Noto', sans-serif;
   display: flex;
   flex-direction: column;
 

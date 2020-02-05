@@ -3,9 +3,9 @@ var webpack = require("webpack");
 var dotenv = require('dotenv').config();
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     entry: path.resolve(__dirname, './src/main.js'),
-    devtool: "cheap-source-map",
+    devtool: "none",
     output: {
         filename: 'main.js',
         path: path.resolve(__dirname, 'dist'),

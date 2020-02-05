@@ -1,10 +1,10 @@
 {
     "appName": {
-      "message": "Tube Centric 2.0",
+      "message": "TubeCentric",
       "description": "The name of the application"
     },
     "appDescription": {
-      "message": "Send scheduled tweets from YouTube&#39;s edit video page. 2.0",
+      "message": "YouTube video optimization for YouTube Creators.",
       "description": "The description of the application"
     }
 }

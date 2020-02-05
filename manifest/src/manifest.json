@@ -1,5 +1,6 @@
 {
     "name": "__MSG_appName__",
+    "short_name": "__MSG_appName__",
     "version": "0.0.1",
     "manifest_version": 2,
     "description": "__MSG_appDescription__",
@@ -10,8 +11,7 @@
     },
     "permissions": [
         "tabs",
-        "http://*/*",
-        "https://*/*",
+        "*://*.youtube.com/*",
         "storage"
     ],
     "background": {
