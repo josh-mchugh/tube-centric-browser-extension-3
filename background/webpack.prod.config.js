@@ -16,7 +16,7 @@ module.exports = {
     plugins: [
       new webpack.DefinePlugin({
         "process.env": {
-          "BASE_URL": "https://www.tubecentric.com"
+          "BASE_URL": `https://www.tubecentric.com`
         }
       }),
     ]

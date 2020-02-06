@@ -3,12 +3,14 @@ var del = require("del");
 var argv = require("yargs").argv;
 var webpack = require("webpack");
 var webpackStream = require("webpack-stream");
+var argv = require('yargs').argv
 
 gulp.task("clean", del.bind(null, ["../dist/background/**"], {force: true}));
 
 gulp.task("webpack", function() {
+    var config = argv.env === "prod" ? require("./webpack.prod.config") : require("./webpack.config");
     return gulp.src("./src/main.js")
-      .pipe(webpackStream(require("./webpack.config"), webpack))
+      .pipe(webpackStream(config, webpack))
       .pipe(gulp.dest("../dist/background"));
 });
 
