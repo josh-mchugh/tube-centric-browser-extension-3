@@ -10,12 +10,12 @@
 		<groupId>com.tubecentric</groupId>
 		<artifactId>browser-extension</artifactId>
 		<version>1.0</version>
-    </parent>
+  </parent>
 
-    <groupId>com.tubecentric</groupId>
-    <artifactId>background</artifactId>
-    <version>1.0</version>
-    <packaging>jar</packaging>
+  <groupId>com.tubecentric</groupId>
+  <artifactId>background</artifactId>
+  <version>1.0</version>
+  <packaging>jar</packaging>
 
 	<build>
 		<plugins>
@@ -37,15 +37,18 @@
 							<arguments>install</arguments>
 						</configuration>
 					</execution>
-          			<execution>
-            			<id>gulp</id>
-            			<goals>
-              				<goal>gulp</goal>
-            			</goals>
-            			<configuration>
-              				<arguments>build --env=${prod}</arguments>
-            			</configuration>
-          			</execution>
+    			<execution>
+            <id>gulp</id>
+	          <goals>
+              <goal>gulp</goal>
+        		</goals>
+            <configuration>
+              <arguments>build</arguments>
+              <environmentVariables>
+                <NODE_ENV>${env}</NODE_ENV>
+              </environmentVariables>
+            </configuration>
+    			</execution>
 				</executions>
 			</plugin>
 		</plugins>

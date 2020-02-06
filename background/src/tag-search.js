@@ -4,7 +4,7 @@ const browser = require("webextension-polyfill");
 browser.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
     if(message.type === 'SEARCH_KEYWORDS') {
-        
+
         axios.request({
             method: "get",
             baseURL: process.env.BASE_URL,
