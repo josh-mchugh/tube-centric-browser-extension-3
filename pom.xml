@@ -22,22 +22,16 @@
             <id>dev</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
-                <property>
-                    <name>env</name>
-                    <value>dev</value>
-                </property>
             </activation>
-            <properties></properties>
+            <properties>
+              <env>development</env>
+            </properties>
         </profile>
         <profile>
             <id>prod</id>
-            <activation>
-                <property>
-                    <name>env</name>
-					<value>prod</value>
-                </property>
-            </activation>
-            <properties></properties>
+            <properties>
+              <env>production</env>
+            </properties>
         </profile>
     </profiles>
 	<build>

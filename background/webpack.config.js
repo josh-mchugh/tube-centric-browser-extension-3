@@ -3,11 +3,11 @@ var webpack = require("webpack");
 var dotenv = require('dotenv').config();
 
 module.exports = {
-    mode: 'development',
+    mode: "development",
     entry: path.resolve(__dirname, './src/main.js'),
     devtool: "cheap-source-map",
     output: {
-        filename: 'main.js',
+        filename: "main.js",
         path: path.resolve(__dirname, 'dist'),
     },
     optimization:{
@@ -16,7 +16,7 @@ module.exports = {
     plugins: [
       new webpack.DefinePlugin({
         "process.env": {
-          "BASE_URL": "https://www.tubecentric.com"
+          "BASE_URL": JSON.stringify("http://localhost:8080")
         }
       }),
     ]
