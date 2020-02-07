@@ -25,7 +25,7 @@ function isVideoEditUrl(pathname) {
 
 function startApp() {
 
-  var left = document.body.querySelector("#left");
+  var left = document.querySelector("#container #left");
 
   if(left) {
 
@@ -56,6 +56,7 @@ function startApp() {
 function attachApp(element) {
 
   const app = document.createElement('div');
+  app.id = "tcTagCounter";
   element.insertBefore(app, element.firstChild);
 
   ReactDOM.render(<TagCounter />, app);

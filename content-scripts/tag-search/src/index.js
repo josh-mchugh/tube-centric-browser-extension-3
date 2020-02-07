@@ -25,7 +25,7 @@ function isVideoEditUrl(pathname) {
 
 function startApp() {
 
-  var left = document.body.querySelector("#left");
+  var left = document.querySelector("#container #left");
 
   if(left) {
 
