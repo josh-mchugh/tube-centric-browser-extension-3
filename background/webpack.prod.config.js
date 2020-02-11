@@ -1,6 +1,6 @@
 var path = require("path");
 var webpack = require("webpack");
-var dotenv = require("dotenv").config();
+var TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
     mode: "production",
@@ -10,8 +10,9 @@ module.exports = {
         filename: "main.js",
         path: path.resolve(__dirname, "dist"),
     },
-    optimization:{
-        minimize: false
+    optimization: {
+      minimize: true,
+      minimizer: [new TerserPlugin()],
     },
     plugins: [
       new webpack.DefinePlugin({
