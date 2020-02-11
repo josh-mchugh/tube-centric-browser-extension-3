@@ -46,7 +46,7 @@ function startApp() {
       });
     });
 
-    observer.observe(document.body, {
+    observer.observe(document.getElementById("container"), {
         childList: true,
         subtree: true
     });
@@ -55,9 +55,14 @@ function startApp() {
 
 function attachApp(element) {
 
-  const app = document.createElement('div');
-  app.id = "tcTagCounter";
-  element.insertBefore(app, element.firstChild);
+  if(!element.querySelector('#tagCounter')) {
 
-  ReactDOM.render(<TagCounter />, app);
+    const app = document.createElement('div');
+    app.id = "tagCounter";
+    element.insertBefore(app, element.firstChild);
+
+    ReactDOM.render(<TagCounter />, app);
+  }
+
+
 }

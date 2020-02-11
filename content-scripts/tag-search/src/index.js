@@ -46,7 +46,7 @@ function startApp() {
       });
     });
 
-    observer.observe(document.body, {
+    observer.observe(document.getElementById("container"), {
         childList: true,
         subtree: true
     });
@@ -55,8 +55,12 @@ function startApp() {
 
 function attachApp(element) {
 
-  const app = document.createElement('div');
-  element.insertBefore(app, element.querySelector(".tags"));
+  if(!element.querySelector('#tagSearch')) {
 
-  ReactDOM.render(<App />, app);
+    const app = document.createElement('div');
+    app.id = "tagSearch";
+    element.insertBefore(app, element.querySelector(".tags"));
+
+    ReactDOM.render(<App />, app);
+  }
 }
