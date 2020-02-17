@@ -1,6 +1,6 @@
 import React from 'react';
 import "./content.scss";
-import { DomObserver } from './utils/DomObserver';
+import MutationSummary from 'mutation-summary';
 
 export class TagCounter extends React.Component {
 
@@ -26,57 +26,100 @@ export class TagCounter extends React.Component {
 
     componentDidMount() {
 
-      const title = document.querySelector(this.titleSelector).textContent;
-      const description = document.querySelector(this.descriptionSelector).textContent;
-
-      this.setState({
-        title: title,
-        description: description,
-        tags: this.getTagsFromDOM(),
-        titleTags: this.getTagsInString(title),
-        descriptionTags: this.getTagsInString(description)
+      this.titleObserver = new MutationSummary({
+        callback: this.handleTitleChange,
+        rootNode: document.querySelector(this.titleSelector),
+        queries: [{ characterData: true }]
       });
 
-      this.titleObserver = new DomObserver(this.titleSelector, this.handleTitleChange).observe();
-      this.descriptionObserver = new DomObserver(this.descriptionSelector, this.handleDescriptionChange).observe();
-      this.tagsObserver = new DomObserver(this.tagsContainerSelector, this.handleTagsChange).observe();
+      this.descriptionObserver = new MutationSummary({
+        callback: this.handleDescriptionChange,
+        rootNode: document.querySelector(this.descriptionSelector),
+        queries: [{ characterData: true }]
+      });
+
+      this.tagsObserver = new MutationSummary({
+        callback: this.handleTagsChange,
+        rootNode: document.querySelector(this.tagsContainerSelector),
+        queries: [{ element: "#chip-text" }]
+      });
     }
 
     componentWillUnmount() {
-
       this.titleObserver.disconnect();
       this.descriptionObserver.disconnect();
       this.tagsObserver.disconnect();
     }
 
-    handleTitleChange = (mutations) => {
-      mutations.forEach(mutation =>
-          this.setState({
-            title: mutation.target.textContent,
-            titleTags: this.getTagsInString(mutation.target.textContent)
-          })
-      );
-    }
-
-    handleDescriptionChange = (mutations) => {
-      mutations.forEach(mutation =>
+    handleTitleChange = (summaries) => {
+      const summary = summaries[0];
+      if(summary.added.length && !summary.valueChanged.length) {
+        const value = summary.added[0].textContent;
+        console.log("Title intialized");
         this.setState({
-          description: mutation.target.textContent,
-          descriptionTags: this.getTagsInString(mutation.target.textContent)
-        })
-      );
+          title: value,
+          titleTags: this.getTagsInString(value, this.state.tags)
+        });
+      }
+
+      if(summary.removed.length && !summary.valueChanged.length) {
+        console.log("Title cleared");
+        this.setState({
+          title: "",
+          titleTags: this.getTagsInString("", this.state.tags)
+        });
+      }
+
+      if(summary.valueChanged.length){
+        console.log("Title changed");
+        const value = summary.valueChanged[0].textContent;
+        this.setState({
+          title: value,
+          titleTags: this.getTagsInString(value, this.state.tags)
+        });
+      }
     }
 
-    handleTagsChange = (mutations) => {
-      mutations.forEach(mutation => {
-        if (mutation.addedNodes.length >= 1 || mutation.removedNodes.length >= 1) {
-          this.setState({
-            tags: this.getTagsFromDOM(),
-            titleTags: this.getTagsInString(this.state.title),
-            descriptionTags: this.getTagsInString(this.state.description)
-          })
-        }
-      });
+    handleDescriptionChange = (summaries) => {
+      const summary = summaries[0];
+      if(summary.added.length && !summary.valueChanged.length) {
+        console.log("Description intialized");
+        const value = summary.added[0].textContent;
+        this.setState({
+          description: value,
+          descriptionTags: this.getTagsInString(value, this.state.tags)
+        });
+      }
+
+      if(summary.removed.length && !summary.valueChanged.length) {
+        console.log("Description cleared");
+        this.setState({
+          description: "",
+          descriptionTags: this.getTagsInString("", this.state.tags)
+        });
+      }
+
+      if(summary.valueChanged.length){
+        console.log("description changed");
+        const value = summary.valueChanged[0].textContent;
+        this.setState({
+          description: value,
+          descriptionTags: this.getTagsInString(value, this.state.tags)
+        });
+      }
+    }
+
+    handleTagsChange = (summaries) => {
+      const summary = summaries[0];
+      if (summary.added.length || summary.removed.length) {
+        console.log("Tags changed");
+        const tags = this.getTagsFromDOM();
+        this.setState({
+          tags: tags,
+          titleTags: this.getTagsInString(this.state.title, tags),
+          descriptionTags: this.getTagsInString(this.state.description, tags)
+        });
+      }
     }
 
     getTagsFromDOM = () => {
@@ -87,11 +130,11 @@ export class TagCounter extends React.Component {
       return tags;
     }
 
-    getTagsInString = (value) => {
-      if (!this.state.tags) {
+    getTagsInString = (value, tags) => {
+      if (!tags.length) {
         return [];
       }
-      return this.state.tags.filter(tag => value.toLowerCase().includes(tag.toLowerCase()));
+      return tags.filter(tag => value.toLowerCase().includes(tag.toLowerCase()));
     }
 
     getTagsCount = () => {

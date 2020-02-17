@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { TagCounter } from './tag-counter.js';
 import * as browser from 'webextension-polyfill';
+import MutationSummary from 'mutation-summary';
+
+console.log("Start of tag-counter");
 
 browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
@@ -10,12 +13,14 @@ browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     const pathname = new URL(request.url).pathname;
     if(isVideoEditUrl(pathname)) {
 
+      console.log("Background script says url changed");
       startApp();
     }
   }
 });
 
 if(isVideoEditUrl(window.location.pathname)) {
+  console.log("window location path is video edit url");
   startApp();
 }
 
@@ -25,44 +30,44 @@ function isVideoEditUrl(pathname) {
 
 function startApp() {
 
-  var left = document.querySelector("#container #left");
+  console.log("Looing for #container #left")
+  var left = document.querySelector("#left.ytcp-video-metadata-basics");
 
   if(left) {
 
-    attachApp(left);
+    attachApp();
 
   }else {
 
-    var observer = new MutationObserver(function(mutations) {
-
-      mutations.forEach(mutation => {
-
-        if(mutation.target.id === "left") {
-
-          attachApp(mutation.target);
-
-          this.disconnect();
+    console.log("Starting observer on nodes below #left");
+    var observer = new MutationSummary({
+      callback: function() {
+        console.log("Found #left div")
+        attachApp();
+      },
+      queries: [
+        {
+          element: "div#left.ytcp-video-metadata-basics",
         }
-      });
-    });
-
-    observer.observe(document.getElementById("container"), {
-        childList: true,
-        subtree: true
+      ]
     });
   }
 }
 
-function attachApp(element) {
+function attachApp() {
 
-  if(!element.querySelector('#tagCounter')) {
+  console.log("Attaching app, checking if #tagCounter exists");
+  if(!document.querySelector('#tagCounter')) {
 
+    console.log("#tagCounter does not exisit");
+
+    const container = document.querySelector("#container #left");
     const app = document.createElement('div');
     app.id = "tagCounter";
-    element.insertBefore(app, element.firstChild);
+    container.insertBefore(app, container.firstChild);
 
     ReactDOM.render(<TagCounter />, app);
+
+    console.log("TagCounter app attached.");
   }
-
-
 }

@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as browser from 'webextension-polyfill';
+import MutationSummary from 'mutation-summary';
+
+console.log("Start of tag-search");
 
 browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
@@ -10,12 +13,14 @@ browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     const pathname = new URL(request.url).pathname;
     if(isVideoEditUrl(pathname)) {
 
+      console.log("Background script says url changed.");
       startApp();
     }
   }
 });
 
 if(isVideoEditUrl(window.location.pathname)) {
+  console.log("window location path is video edit url");
   startApp();
 }
 
@@ -25,41 +30,41 @@ function isVideoEditUrl(pathname) {
 
 function startApp() {
 
+  console.log("Looing for #container #left")
   var left = document.querySelector("#container #left");
 
   if(left) {
 
-    attachApp(left);
+    attachApp();
 
   }else {
 
-    var observer = new MutationObserver(function(mutations) {
-
-      mutations.forEach(mutation => {
-
-        if(mutation.target.id === "left") {
-
-          attachApp(mutation.target);
-
-          this.disconnect();
+    console.log("Starting observer on nodes below #left");
+    var observer = new MutationSummary({
+      callback: function() {
+        console.log("Found #left div")
+        attachApp();
+      },
+      queries: [
+        {
+          element: "div#left.ytcp-video-metadata-basics",
         }
-      });
-    });
-
-    observer.observe(document.getElementById("container"), {
-        childList: true,
-        subtree: true
+      ]
     });
   }
 }
 
-function attachApp(element) {
+function attachApp() {
 
-  if(!element.querySelector('#tagSearch')) {
+  console.log("Attaching app, checking if #tagCounter exists");
+  if(!document.querySelector('#tagSearch')) {
 
+    console.log("#tagSearch does not exisit");
+
+    const container = document.querySelector("#container #left");
     const app = document.createElement('div');
     app.id = "tagSearch";
-    element.insertBefore(app, element.querySelector(".tags"));
+    container.insertBefore(app, container.querySelector(".tags"));
 
     ReactDOM.render(<App />, app);
   }

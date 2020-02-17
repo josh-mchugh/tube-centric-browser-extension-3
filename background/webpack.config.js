@@ -1,6 +1,5 @@
 var path = require("path");
 var webpack = require("webpack");
-var dotenv = require('dotenv').config();
 
 module.exports = {
     mode: "development",
