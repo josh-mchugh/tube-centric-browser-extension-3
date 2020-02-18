@@ -1,9 +1,7 @@
 var gulp = require("gulp");
 var del = require("del");
-var argv = require("yargs").argv;
 var webpack = require("webpack");
 var webpackStream = require("webpack-stream");
-var argv = require('yargs').argv
 
 gulp.task("clean", del.bind(null, ["../dist/background/**"], {force: true}));
 

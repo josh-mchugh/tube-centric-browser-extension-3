@@ -1,10 +1,11 @@
 const browser = require("webextension-polyfill");
 const tagSearch = require('./tag-search');
+const { Logger } = require("tubecentric-extension-lib");
 
-console.log("Hello background script!");
+Logger.info("Hello background script!");
 
 browser.runtime.onInstalled.addListener(details => {
-  console.log("previousVersion", details.previousVersion);
+  Logger.info("previousVersion", details.previousVersion);
 });
 
 

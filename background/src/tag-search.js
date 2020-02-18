@@ -1,5 +1,6 @@
 const axios = require('axios');
 const browser = require("webextension-polyfill");
+const { Logger } = require("tubecentric-extension-lib");
 
 browser.runtime.onMessage.addListener(function(message, sender, sendResponse){
 
@@ -17,7 +18,7 @@ browser.runtime.onMessage.addListener(function(message, sender, sendResponse){
               sendResponse(response);
           })
           .catch(function (error) {
-              console.log(error);
+              Logger.error(error);
           });
 
         return true;

@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import { TagCounter } from './tag-counter.js';
 import * as browser from 'webextension-polyfill';
 import MutationSummary from 'mutation-summary';
+import { Logger } from "tubecentric-extension-lib";
 
-console.log("Start of tag-counter");
+Logger.info("Start of tag-counter");
 
 browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
@@ -13,14 +14,14 @@ browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     const pathname = new URL(request.url).pathname;
     if(isVideoEditUrl(pathname)) {
 
-      console.log("Background script says url changed");
+      Logger.info("Background script says url changed");
       startApp();
     }
   }
 });
 
 if(isVideoEditUrl(window.location.pathname)) {
-  console.log("window location path is video edit url");
+  Logger.info("window location path is video edit url");
   startApp();
 }
 
@@ -30,7 +31,7 @@ function isVideoEditUrl(pathname) {
 
 function startApp() {
 
-  console.log("Looing for #container #left")
+  Logger.info("Looing for #container #left")
   var left = document.querySelector("#left.ytcp-video-metadata-basics");
 
   if(left) {
@@ -39,10 +40,10 @@ function startApp() {
 
   }else {
 
-    console.log("Starting observer on nodes below #left");
+    Logger.info("Starting observer on nodes below #left");
     var observer = new MutationSummary({
       callback: function() {
-        console.log("Found #left div")
+        Logger.info("Found #left div")
         attachApp();
       },
       queries: [
@@ -56,10 +57,10 @@ function startApp() {
 
 function attachApp() {
 
-  console.log("Attaching app, checking if #tagCounter exists");
+  Logger.info("Attaching app, checking if #tagCounter exists");
   if(!document.querySelector('#tagCounter')) {
 
-    console.log("#tagCounter does not exisit");
+    Logger.info("#tagCounter does not exisit");
 
     const container = document.querySelector("#container #left");
     const app = document.createElement('div');
@@ -68,6 +69,6 @@ function attachApp() {
 
     ReactDOM.render(<TagCounter />, app);
 
-    console.log("TagCounter app attached.");
+    Logger.info("TagCounter app attached.");
   }
 }

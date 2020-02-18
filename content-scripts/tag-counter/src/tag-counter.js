@@ -1,6 +1,7 @@
 import React from 'react';
 import "./content.scss";
 import MutationSummary from 'mutation-summary';
+import { Logger } from "tubecentric-extension-lib";
 
 export class TagCounter extends React.Component {
 
@@ -55,7 +56,7 @@ export class TagCounter extends React.Component {
       const summary = summaries[0];
       if(summary.added.length && !summary.valueChanged.length) {
         const value = summary.added[0].textContent;
-        console.log("Title intialized");
+        Logger.info("Title intialized");
         this.setState({
           title: value,
           titleTags: this.getTagsInString(value, this.state.tags)
@@ -63,7 +64,7 @@ export class TagCounter extends React.Component {
       }
 
       if(summary.removed.length && !summary.valueChanged.length) {
-        console.log("Title cleared");
+        Logger.info("Title cleared");
         this.setState({
           title: "",
           titleTags: this.getTagsInString("", this.state.tags)
@@ -71,7 +72,7 @@ export class TagCounter extends React.Component {
       }
 
       if(summary.valueChanged.length){
-        console.log("Title changed");
+        Logger.info("Title changed");
         const value = summary.valueChanged[0].textContent;
         this.setState({
           title: value,
@@ -83,7 +84,7 @@ export class TagCounter extends React.Component {
     handleDescriptionChange = (summaries) => {
       const summary = summaries[0];
       if(summary.added.length && !summary.valueChanged.length) {
-        console.log("Description intialized");
+        Logger.info("Description intialized");
         const value = summary.added[0].textContent;
         this.setState({
           description: value,
@@ -92,7 +93,7 @@ export class TagCounter extends React.Component {
       }
 
       if(summary.removed.length && !summary.valueChanged.length) {
-        console.log("Description cleared");
+        Logger.info("Description cleared");
         this.setState({
           description: "",
           descriptionTags: this.getTagsInString("", this.state.tags)
@@ -100,7 +101,7 @@ export class TagCounter extends React.Component {
       }
 
       if(summary.valueChanged.length){
-        console.log("description changed");
+        Logger.info("description changed");
         const value = summary.valueChanged[0].textContent;
         this.setState({
           description: value,
@@ -112,7 +113,7 @@ export class TagCounter extends React.Component {
     handleTagsChange = (summaries) => {
       const summary = summaries[0];
       if (summary.added.length || summary.removed.length) {
-        console.log("Tags changed");
+        Logger.info("Tags changed");
         const tags = this.getTagsFromDOM();
         this.setState({
           tags: tags,
