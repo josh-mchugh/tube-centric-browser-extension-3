@@ -70,6 +70,9 @@ class App extends React.Component {
   render() {
     return (
         <div className={'tc-scope'}>
+          <div className={'logo'}>
+            <img src={browser.runtime.getURL("/assets/logo-icon.svg")} alt="TubeCentric logo"/>
+          </div>
           <div className={'container'}>
             <div className={'search-form'}>
               <input className={'form-control'} placeholder={'Search Keywords'} value={this.state.query} onChange={this.onSearchInputChange} onKeyUp={this.onKeyUp} />

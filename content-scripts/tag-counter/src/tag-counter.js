@@ -2,6 +2,7 @@ import React from 'react';
 import "./content.scss";
 import MutationSummary from 'mutation-summary';
 import { Logger } from "tubecentric-extension-lib";
+import * as browser from 'webextension-polyfill';
 
 export class TagCounter extends React.Component {
 
@@ -161,32 +162,35 @@ export class TagCounter extends React.Component {
     render() {
         return (
             <div className={'tc-scope'}>
-                <div className={'container'}>
-                  <div>
-                    <div className={'value'}>
-                      {this.getTitleTagsCount()} / {this.getTagsCount()}
-                    </div>
-                    <div className={'label'}>
-                      Tags in Title
-                    </div>
+              <div className={'logo'}>
+                <img src={browser.runtime.getURL("/assets/logo-icon.svg")} alt="TubeCentric logo"/>
+              </div>
+              <div className={'container'}>
+                <div>
+                  <div className={'value'}>
+                    {this.getTitleTagsCount()} / {this.getTagsCount()}
                   </div>
-                  <div>
-                    <div className={'value'}>
-                      {this.getDescriptionTagsCount()} / {this.getTagsCount()}
-                    </div>
-                    <div className={'label'}>
-                      Tags in Description
-                    </div>
-                  </div>
-                  <div>
-                    <div className={'value'}>
-                      {this.getTotalTagsUsedCount()} / {this.getTagsCount()}
-                    </div>
-                    <div className={'label'}>
-                      Tags Used
-                    </div>
+                  <div className={'label'}>
+                    Tags in Title
                   </div>
                 </div>
+                <div>
+                  <div className={'value'}>
+                    {this.getDescriptionTagsCount()} / {this.getTagsCount()}
+                  </div>
+                  <div className={'label'}>
+                    Tags in Description
+                  </div>
+                </div>
+                <div>
+                  <div className={'value'}>
+                    {this.getTotalTagsUsedCount()} / {this.getTagsCount()}
+                  </div>
+                  <div className={'label'}>
+                    Tags Used
+                  </div>
+                </div>
+              </div>
             </div>
         )
     }

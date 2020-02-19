@@ -12,6 +12,16 @@
 
 .tc-scope {
   font-family: 'Roboto', 'Noto', sans-serif;
+  .logo {
+    position: relative;
+    img {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 17px;
+      height: 17px;
+    }
+  }
   .container {
     display: flex;
     flex-direction: row;
