@@ -5,68 +5,124 @@ import * as browser from 'webextension-polyfill';
 import MutationSummary from 'mutation-summary';
 import { Logger } from "tubecentric-extension-lib";
 
-Logger.info("Start of tag-search");
+Logger.info("tag-search started");
 
 browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
   if (request.type === 'URL_CHANGE') {
 
+    Logger.info("URL has changed: ", request.url);
     const pathname = new URL(request.url).pathname;
     if(isVideoEditUrl(pathname)) {
-
-      Logger.info("Background script says url changed.");
-      startApp();
+      startEditApp();
+    }
+    if(isVideoUpload(pathname)) {
+      startUploadApp();
     }
   }
 });
 
 if(isVideoEditUrl(window.location.pathname)) {
-  Logger.info("window location path is video edit url");
-  startApp();
+  Logger.info("window location path: video edit");
+  startEditApp();
+}
+
+if(isVideoUpload(window.location.pathname)) {
+  Logger.info("window location path: videos upload");
+  startUploadApp();
 }
 
 function isVideoEditUrl(pathname) {
   return new RegExp(/\/video\/[\S]*\/edit/i).test(pathname);
 }
 
-function startApp() {
-
-  Logger.info("Looing for #container #left")
-  var left = document.querySelector("#container #left");
-
-  if(left) {
-
-    attachApp();
-
-  }else {
-
-    Logger.info("Starting observer on nodes below #left");
-    var observer = new MutationSummary({
-      callback: function() {
-        Logger.info("Found #left div")
-        attachApp();
-      },
-      queries: [
-        {
-          element: "div#left.ytcp-video-metadata-basics",
-        }
-      ]
-    });
-  }
+function isVideoUpload(pathname) {
+  return new RegExp(/\/channel\/[\S]*\/videos\/upload[\S]*/i).test(pathname);
 }
 
-function attachApp() {
+function startEditApp() {
 
-  Logger.info("Attaching app, checking if #tagCounter exists");
-  if(!document.querySelector('#tagSearch')) {
+  const targetElement = "div#left.ytcp-video-metadata-basics";
 
-    Logger.info("#tagSearch does not exisit");
+  Logger.info("Looking for: ", targetElement);
+  if(document.querySelector(targetElement)) {
+
+    Logger.info("Found ", targetElement);
+    attachEditApp();
+    return;
+  }
+
+  Logger.info("Unable to find ", targetElement);
+  Logger.info("Starting observer for: ", targetElement);
+
+  var observer = new MutationSummary({
+    callback: function() {
+      Logger.info("Found ", targetElement);
+      attachEditApp();
+    },
+    queries: [
+      {
+        element: targetElement,
+      }
+    ]
+  });
+}
+
+function startUploadApp() {
+
+  const targetElement = "div.left-col";
+
+  Logger.info("Starting observer for: ", targetElement);
+
+  var observer = new MutationSummary({
+    callback: function() {
+      Logger.info("Found ", targetElement);
+      attachUploadApp();
+    },
+    queries: [
+      {
+        element: targetElement
+      }
+    ]
+  });
+}
+
+function attachEditApp() {
+
+  const appId = "tagSearchEdit";
+
+  Logger.info("Looking for element with ID: ", appId);
+  if(!document.getElementById(appId)) {
+
+    Logger.info("Element with ID '" + appId + "' count not be found.");
 
     const container = document.querySelector("#container #left");
     const app = document.createElement('div');
-    app.id = "tagSearch";
+    app.id = appId;
     container.insertBefore(app, container.querySelector(".tags"));
 
-    ReactDOM.render(<App />, app);
+    ReactDOM.render(<App location="edit"/>, app);
+  
+    Logger.info("App attached with ID: ", app);  
+  }
+}
+
+function attachUploadApp() {
+
+  const appId = "tagSearchUpload";
+
+  Logger.info("Looking for element with ID: ", appId);
+  if(!document.getElementById(appId)) {
+
+    Logger.info("Element with ID '" + appId + "' count not be found.");
+
+    const container = document.querySelector("div.left-col #advanced");
+    const app = document.createElement('div');
+    app.id = appId;
+    container.insertBefore(app, container.querySelector("#tags-container"));
+
+    ReactDOM.render(<App location="upload"/>, app);
+
+    Logger.info("App attached with ID: ", app);
   }
 }
