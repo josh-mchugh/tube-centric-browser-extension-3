@@ -8,7 +8,8 @@ var componentName = "tag-counter";
 gulp.task("clean", del.bind(null, ["../../dist/content-scripts/" + componentName + "/**"], {force: true}));
 
 gulp.task("build:js", function(cb) {
-  exec('npm run build', function (err, stdout, stderr) {
+  var buildType = process.env.NODE_ENV === "production" ? ":prod" : "";
+  exec('npm run build' + buildType, function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         cb(err);

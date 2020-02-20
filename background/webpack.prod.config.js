@@ -17,7 +17,8 @@ module.exports = {
     plugins: [
       new webpack.DefinePlugin({
         "process.env": {
-          "BASE_URL": JSON.stringify("https://www.tubecentric.com")
+          "BASE_URL": JSON.stringify("https://www.tubecentric.com"),
+          "REACT_APP_LOGGING_ENABLED": JSON.stringify("DISABLED")
         }
       }),
     ]

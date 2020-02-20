@@ -15,7 +15,8 @@ module.exports = {
     plugins: [
       new webpack.DefinePlugin({
         "process.env": {
-          "BASE_URL": JSON.stringify("http://localhost:8080")
+          "BASE_URL": JSON.stringify("http://localhost:8080"),
+          "REACT_APP_LOGGING_ENABLED": JSON.stringify("ENABLED")
         }
       }),
     ]
