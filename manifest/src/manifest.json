@@ -23,7 +23,7 @@
     "content_scripts": [
         {
             "matches": [
-                "*://*.youtube.com/*"
+                "*://*.studio.youtube.com/*"
             ],
             "css": [
               "content-scripts/tag-counter/tag-counter.css",
