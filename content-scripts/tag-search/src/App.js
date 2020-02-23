@@ -5,6 +5,10 @@ import * as browser from 'webextension-polyfill';
 
 class App extends React.Component {
 
+  editTagInputSelector = "#left .tags #text-input";
+
+  uploadTagInputSelector = "#tags-container #text-input";
+
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -13,6 +17,10 @@ class App extends React.Component {
       results: [],
       tooltipText: "Click to add"
     }
+
+    this.tagsInputSelector = props.location === "edit" 
+      ? this.editTagInputSelector 
+      : this.uploadTagInputSelector;
   }
 
   handleClose = () => {
@@ -53,9 +61,9 @@ class App extends React.Component {
   }
 
   onSearchResultClick = (tag) => {
-    document.querySelector("#left .tags #text-input").focus();
-    document.querySelector("#left .tags #text-input").value = tag;
-    document.querySelector("#left .tags #text-input").blur();
+    document.querySelector(this.tagsInputSelector).focus();
+    document.querySelector(this.tagsInputSelector).value = tag;
+    document.querySelector(this.tagsInputSelector).blur();
     this.setState({tooltipText: "Added!"});
   }
 

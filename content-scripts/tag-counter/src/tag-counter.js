@@ -6,6 +6,20 @@ import * as browser from 'webextension-polyfill';
 
 export class TagCounter extends React.Component {
 
+    editSelectors = {
+      title: "#left .title #textbox",
+      description: "#left .description #textbox",
+      tagsContainer: "#left .tags #chip-bar .chip-and-bar",
+      tags: "#left .tags #chip-bar .chip-and-bar #chip-text"
+    }
+
+    uploadSelectors = {
+      title: ".left-col .title-textarea #textbox",
+      description: ".left-col .description-textarea #textbox",
+      tagsContainer: ".left-col #tags-container",
+      tags: ".left-col #tags-container #chip-text"
+    }
+
     constructor(props, context) {
       super(props, context);
       this.state = {
@@ -16,10 +30,7 @@ export class TagCounter extends React.Component {
         descriptionTags: []
       };
 
-      this.titleSelector = '#left .title #textbox';
-      this.descriptionSelector = '#left .description #textbox';
-      this.tagsContainerSelector = '#left .tags #chip-bar .chip-and-bar';
-      this.tagsSelector = this.tagsContainerSelector + ' #chip-text';
+      this.selectors = props.location === "upload" ? this.uploadSelectors : this.editSelectors;
 
       this.titleObserver = null
       this.descriptionObserver = null;
@@ -28,21 +39,29 @@ export class TagCounter extends React.Component {
 
     componentDidMount() {
 
+      if(this.props.location === "upload") {
+
+        this.setState({
+          title: document.querySelector(this.selectors.title).textContent,
+          description: document.querySelector(this.selectors.description).textContent
+        });
+      }
+
       this.titleObserver = new MutationSummary({
         callback: this.handleTitleChange,
-        rootNode: document.querySelector(this.titleSelector),
+        rootNode: document.querySelector(this.selectors.title),
         queries: [{ characterData: true }]
       });
 
       this.descriptionObserver = new MutationSummary({
         callback: this.handleDescriptionChange,
-        rootNode: document.querySelector(this.descriptionSelector),
+        rootNode: document.querySelector(this.selectors.description),
         queries: [{ characterData: true }]
       });
 
       this.tagsObserver = new MutationSummary({
         callback: this.handleTagsChange,
-        rootNode: document.querySelector(this.tagsContainerSelector),
+        rootNode: document.querySelector(this.selectors.tagsContainer),
         queries: [{ element: "#chip-text" }]
       });
     }
@@ -126,7 +145,7 @@ export class TagCounter extends React.Component {
 
     getTagsFromDOM = () => {
       const tags = [];
-      document.querySelectorAll(this.tagsSelector).forEach(node => {
+      document.querySelectorAll(this.selectors.tags).forEach(node => {
         tags.push(node.textContent);
       });
       return tags;

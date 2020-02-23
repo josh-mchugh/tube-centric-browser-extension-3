@@ -86,3 +86,15 @@
     }
   }
 }
+
+.fade.modal-backdrop.show {
+  z-index: 9997;
+}
+
+.fade.modal.show {
+  z-index: 9998;
+}
+
+.tooltip {
+  z-index: 9999;
+}
