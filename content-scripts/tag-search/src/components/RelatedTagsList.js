@@ -39,7 +39,7 @@ export default class RelatedTagsList extends React.Component {
             <div className={this.displayTabContent()}>
                 <div className={`${styles['tc-search-form']}`}>
                     <div className={`${styles['input-group']}`}>
-                        <input className={`${styles['form-control']}`} placeholder={'Search Keywords'} value={this.props.query} onChange={this.props.onQueryChange} onKeyUp={this.props.onSearchEnter}/>
+                        <input className={`${styles['form-control']}`} placeholder={'Search Keywords'} value={this.props.query} onChange={this.props.onQueryChange} onKeyUp={this.props.onSearchEnter} ref={input => input && input.focus()}/>
                         <div className={`${styles['input-group-append']}`}>
                             <button className={`${styles['btn']} ${styles['button--primary']}`} type={'button'} onClick={this.props.onSearch}>Search</button>
                         </div>

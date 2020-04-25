@@ -13,6 +13,12 @@ export default class Modal extends React.Component {
             this.props.close();
         }
     }
+    
+    onModalKeyUp = (event) => {
+        if(event.keyCode === 27) {
+            this.props.close();
+        }
+    }
 
     modalDisplayStyle = () => {
         if (this.props.open) {
@@ -28,7 +34,7 @@ export default class Modal extends React.Component {
         }
         
         return (
-            <div className={this.modalDisplayStyle()}>
+            <div className={this.modalDisplayStyle()} onKeyUp={this.onModalKeyUp}>
                 <div className={`${styles['tc-modal-content']}`}>
                     <div className={`${styles['tc-modal-header']}`}>
                         <div className={`${styles['tc-modal-header__logo']}`}>
