@@ -1,130 +1,82 @@
 import React from 'react'
-import './App.scss';
-import { Modal, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import styles from './scss/App.module.scss';
 import * as browser from 'webextension-polyfill';
+import { Logger } from 'tubecentric-extension-lib';
+import Modal from './components/Modal';
+import RelatedTagsList from './components/RelatedTagsList';
+import TabsContainer from './components/TabsContainer';
 
 class App extends React.Component {
-
-  editTagInputSelector = "#left .tags #text-input";
-
-  uploadTagInputSelector = "#tags-container #text-input";
 
   constructor(props, context) {
     super(props, context);
     this.state = {
-      show: false,
+      open: false,
       query: "",
-      results: [],
-      tooltipText: "Click to add"
+      results: {},
+      location:  props.location
     }
-
-    this.tagsInputSelector = props.location === "edit" 
-      ? this.editTagInputSelector 
-      : this.uploadTagInputSelector;
   }
 
-  handleClose = () => {
-    this.setState({show: false});
+  onQueryChange = (event) => {
+    this.setState({query: event.target.value});
   }
 
-  handleOpen = () => {
-    this.searchKeywords(this.state.query);
-    this.setState({show: true});
-  }
-
-  onKeyUp = (event) => {
+  onSearchEnter = (event) => {
     if(event.keyCode === 13){
       this.setState({
         query: event.target.value,
-        show: true
+        open: true
       });
-      this.searchKeywords(event.target.value);
+      this.onSearch();
     }
   }
 
   onSearchButtonClick = () => {
-    this.searchKeywords(this.state.query);
+    this.setState({open: true});
+    this.onSearch();
   }
 
-  onSearchInputChange = (event) => {
-    this.setState({query: event.target.value});
-  }
-
-  searchKeywords = (query) => {
+  onSearch = () => {
     browser.runtime.sendMessage({
       type: 'SEARCH_KEYWORDS',
-      query: query
+      query: this.state.query
     })
     .then((response) => {
         this.setState({results: response.data});
     });
   }
 
-  onSearchResultClick = (tag) => {
-    document.querySelector(this.tagsInputSelector).focus();
-    document.querySelector(this.tagsInputSelector).value = tag;
-    document.querySelector(this.tagsInputSelector).blur();
-    this.setState({tooltipText: "Added!"});
-  }
-
-  onToolTipHide = () => {
-    this.setState({tooltipText: 'Click to add'});
-  }
-
-  renderTooltip = (placement) => {
-    return <Tooltip id={`tooltip-${placement}`}>{this.state.tooltipText}</Tooltip>;
-  }
-
   render() {
     return (
-        <div className={'tc-scope'}>
-          <div className={'logo'}>
-            <img src={browser.runtime.getURL("/assets/logo-icon.svg")} alt="TubeCentric logo"/>
+        <div className={styles['tc']}>
+          <div className={styles['tc-logo']}>
+            <img className={styles['tc-logo__img']} src={browser.runtime.getURL("/assets/logo-icon.svg")}/>
           </div>
-          <div className={'container'}>
-            <div className={'search-form'}>
-              <input className={'form-control'} placeholder={'Search Keywords'} value={this.state.query} onChange={this.onSearchInputChange} onKeyUp={this.onKeyUp} />
-              <button className={'btn btn-primary'} type='button' onClick={this.handleOpen}>Search</button>
+          <div className={styles['tc-widget']}>
+            <div className={styles['tc-widget__search']}>
+              <div className={styles['input-group']}>
+                <input className={styles['form-control']} placeholder={'Search Keywords'} value={this.state.query} onChange={this.onQueryChange} onKeyUp={this.onSearchEnter} />
+                <div className={styles['input-group-append']}>
+                  <button className={`${styles['btn']} ${styles['button--primary']}`} type='button' onClick={this.onSearchButtonClick}>Search</button>
+                </div>
+              </div>
             </div>
           </div>
-          <Modal show={this.state.show} onHide={this.handleClose}>
-            <Modal.Header closeButton>
-              <Modal.Title>
-                <div className='tc-modal-title'>
-                  Search Keywords
-                </div>
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <div className={'tc-modal-body'}>
-                <div className={'search-form'}>
-                    <input className={'form-control'} placeholder={'Search Keywords'} value={this.state.query} onChange={this.onSearchInputChange} onKeyUp={this.onKeyUp} />
-                    <button className={'btn btn-primary'} type="button" onClick={this.onSearchButtonClick}>Search</button>
-                </div>
-                {this.state.results.length > 0 &&
-                  <div className={'search-results'}>
-                    <div className={'header'}>
-                      Most Relavent Tags
-                    </div>
-                    <ul className={'results'}>
-                      {this.state.results.map((item, index) =>
-                        <OverlayTrigger
-                          key={index}
-                          placement="right"
-                          onExit={this.onToolTipHide}
-                          overlay={this.renderTooltip(index)}
-                        >
-                          <li key={index} className={'item'} onClick={() => this.onSearchResultClick(item.string)}>{item.string}</li>
-                        </OverlayTrigger>
-                      )}
-                    </ul>
-                  </div>
-                }
-              </div>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={this.handleClose}>Close</Button>
-            </Modal.Footer>
+          <Modal 
+            open={this.state.open} 
+            close={() => this.setState({open: false})}>
+              <TabsContainer>
+                <RelatedTagsList
+                  show={true} 
+                  query={this.state.query}
+                  onQueryChange={this.onQueryChange}
+                  onSearch={this.onSearch}
+                  onSearchEnter={this.onSearchEnter}
+                  results={this.state.results}
+                  location={this.state.location}>
+                </RelatedTagsList>
+            </TabsContainer>
           </Modal>
         </div>
     )

@@ -9,7 +9,7 @@ browser.runtime.onMessage.addListener(function(message, sender, sendResponse){
         axios.request({
             method: "get",
             baseURL: process.env.BASE_URL,
-            url: "/api/v1/tag-search",
+            url: "/api/v2/tag-search",
             params: {
               query: message.query
             }
